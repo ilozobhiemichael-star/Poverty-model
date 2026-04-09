@@ -25,8 +25,8 @@ def predict():
         education_years = clean(request.form["education_years"])
         employment = clean(request.form["employment"])
         financial_assets = clean(request.form["financial_assets"])
-
-        features = np.array([[income, household_size, education_years, employment, financial_assets]])
+        income_per_person = income / household_size
+        features = np.array([[income, household_size, income_per_person, education_years, employment, financial_assets]])
 
         scaled = scaler.transform(features)
 

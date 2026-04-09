@@ -26,7 +26,8 @@ data["poverty"] = (
 ).astype(int)
 
 # Features
-X = data[["income", "household_size", "education_years", "employment", "assets_ratio"]]
+data['income_per_person'] = df['income'] / df['household_size']
+X = data[["income", "household_size", "income_per_person","education_years", "employment", "assets_ratio"]]
 y = data["poverty"]
 
 # Scale
