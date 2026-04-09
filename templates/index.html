@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Poverty Risk Predictor</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: linear-gradient(to right, #667eea, #764ba2);
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            background: white;
+            width: 420px;
+            margin: 60px auto;
+            padding: 30px;
+            border-radius: 10px;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 15px;
+        }
+
+        small {
+            color: gray;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            background: #fff;   /* FIXES TRANSPARENCY */
+            color: #000;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 12px;
+            width: 100%;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f1f1f1;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .high {
+            color: red;
+            font-weight: bold;
+        }
+
+        .low {
+            color: green;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>Poverty Risk Predictor</h2>
+
+    <form action="/predict" method="POST">
+
+        <label>Monthly Income (₦)</label>
+        <input type="text" name="income" placeholder="e.g. 150,000" required>
+        <small>Enter total monthly income in Naira</small>
+
+        <label>Household Size</label>
+        <input type="text" name="household_size" placeholder="e.g. 4" required>
+
+        <label>Years of Education</label>
+        <input type="text" name="education_years" placeholder="e.g. 10" required>
+
+        <label>Employment Status</label>
+        <input type="text" name="employment" placeholder="0 = Unemployed, 1 = Employed" required>
+
+        <label>Financial Assets (₦)</label>
+        <input type="text" name="financial_assets" placeholder="e.g. 200,000" required>
+        <small>Total savings/investments (not monthly)</small>
+
+        <button type="submit">Predict</button>
+
+    </form>
+    {% if error %}
+<div class="result" style="background:#ffe6e6; color:red;">
+    {{ error }}
+</div>
+{% endif %}
+
+    {% if prediction is not none %}
+    <div class="result">
+        <p><strong>Prediction:</strong> {{ prediction }}</p>
+
+        <p>
+            <strong>Poverty Risk:</strong>
+            <span class="{{ 'high' if probability > 50 else 'low' }}">
+                {{ probability }}%
+            </span>
+        </p>
+    </div>
+    {% endif %}
+
+</div>
+
+</body>
+</html>
