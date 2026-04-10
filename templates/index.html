@@ -83,20 +83,20 @@
     <form action="/predict" method="POST">
 
         <label>Monthly Income (₦)</label>
-        <input type="text" name="income" placeholder="e.g. 150,000" required>
+        <input type="number" name="income" placeholder="e.g. 150000" required>
         <small>Enter total monthly income in Naira</small>
 
         <label>Household Size</label>
-        <input type="text" name="household_size" placeholder="e.g. 4" required>
+      <input type="number" name="household_size" min="1" max="100000" required>
 
         <label>Years of Education</label>
-        <input type="text" name="education_years" placeholder="e.g. 10" required>
+        <input type="number" name="education_years" placeholder="e.g. 10" required>
 
         <label>Employment Status</label>
-        <input type="text" name="employment" placeholder="0 = Unemployed, 1 = Employed" required>
+        <input type="number" name="employment" placeholder="0 = Unemployed, 1 = Employed" required>
 
         <label>Financial Assets (₦)</label>
-        <input type="text" name="financial_assets" placeholder="e.g. 200,000" required>
+        <input type="number" name="financial_assets" placeholder="e.g. 200000" required>
         <small>Total savings/investments (not monthly)</small>
 
         <button type="submit">Predict</button>

@@ -11,31 +11,44 @@ scaler = joblib.load("poverty_scaler.pkl")
 @app.route("/")
 def home():
     return render_template("index.html", prediction=None, probability=None)
-
-
 @app.route("/predict", methods=["POST"])
 def predict():
     try:
-        # Clean ALL numeric inputs (allow commas everywhere)
+        # Clean function
         def clean(x):
             x = x.replace(",", "").strip()
             if x == "":
                 return 0.0
             return float(x)
+
+        # Get inputs
         income = clean(request.form["income"])
         household_size = clean(request.form["household_size"])
         education_years = clean(request.form["education_years"])
         employment = clean(request.form["employment"])
         financial_assets = clean(request.form["financial_assets"])
+
+        # Prevent division by zero
+        if household_size == 0:
+            household_size = 1
+
+        # New feature (bias fix)
         income_per_person = income / household_size
-        features = np.array([[income, household_size, income_per_person, education_years, employment, financial_assets]])
 
-        scaled = scaler.transform(features)
+        # Create feature array (VERY IMPORTANT ORDER)
+        features = np.array([[income, household_size, income_per_person,
+                              education_years, employment, financial_assets]])
 
-        probability = model.predict_proba(scaled)[0][1]
-        probability = max(0, min(1, probability))
+        features_scaled = scaler.transform(features)
 
-        prediction = 1 if probability > 0.5 else 0
+        probability = model.predict_proba(features_scaled)[0][1]
+
+        if probability > 0.7:
+            prediction = "High Poverty Risk"
+        elif probability > 0.4:
+            prediction = "Moderate Poverty Risk"
+        else:
+            prediction = "Low Poverty Risk"
 
         return render_template(
             "index.html",
@@ -43,17 +56,16 @@ def predict():
             probability=round(probability * 100, 2)
         )
 
-    except Exception:
+    except Exception as e:
         return render_template(
             "index.html",
             prediction=None,
             probability=None,
-            error="Please enter valid numeric values (no letters or symbols)."
+            error=str(e)
         )
-
-
-import os
-
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 10000))
-    app.run(host="0.0.0.0", port=port)
+ app.run(debug=True)
+
+
+
+
