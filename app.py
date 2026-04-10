@@ -18,8 +18,9 @@ def predict():
     try:
         # Clean ALL numeric inputs (allow commas everywhere)
         def clean(x):
+            if x is None or x.strip() == "":
+                raise ValueError("Empty input")
             return float(x.replace(",", "").strip())
-
         income = clean(request.form["income"])
         household_size = clean(request.form["household_size"])
         education_years = clean(request.form["education_years"])
