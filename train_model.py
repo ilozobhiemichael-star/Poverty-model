@@ -52,8 +52,26 @@ X_train_scaled = scaler.fit_transform(X_train)
 X_test_scaled  = scaler.transform(X_test)
 
 # ── Train ─────────────────────────────────────────────────────────
-model = LogisticRegression(max_iter=1000, class_weight="balanced")
-model.fit(X_train_scaled, y_train)
+# ── Train (with hyperparameter tuning) ────────────────────────────
+from sklearn.model_selection import GridSearchCV
+
+param_grid = {
+    "C": [0.01, 0.05, 0.1, 0.2, 0.5, 0.6, 0.7, 1, 2]
+}
+
+grid = GridSearchCV(
+    LogisticRegression(max_iter=1000, class_weight="balanced"),
+    param_grid,
+    cv=5,
+    scoring="roc_auc"
+)
+
+grid.fit(X_train_scaled, y_train)
+
+print("Best C:", grid.best_params_["C"])
+print("Best CV Score:", grid.best_score_)
+
+model = grid.best_estimator_
 
 # ── Evaluation ────────────────────────────────────────────────────
 y_pred      = model.predict(X_test_scaled)
