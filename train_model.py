@@ -24,9 +24,9 @@ data = pd.DataFrame({
 data["income_per_person"] = data["income"] / data["household_size"]
 data["assets_ratio"]      = data["financial_assets"] / (data["income"] + 1)
 
-# ── Poverty label ─────────────────────────────────────────────────
+# ── Poverty label (threshold: ₦90,000 per person) ─────────────────
 data["poverty"] = (
-    (data["income_per_person"] < 25000) |
+    (data["income_per_person"] < 90000) |
     (data["employment"] == 0) |
     (data["education_years"] < 6) |
     (data["assets_ratio"] < 0.5)
@@ -96,8 +96,10 @@ for feat, coef in coef_pairs:
     print(f"   {feat:<22} {coef:.4f}  {bar}")
 
 print("=" * 58)
+# ▸ Updated label to reflect ₦90,000 threshold
+print("\n   Poverty threshold : ₦90,000 income per person")
 
 # ── Save ──────────────────────────────────────────────────────────
 joblib.dump(model,  "poverty_model.pkl")
 joblib.dump(scaler, "poverty_scaler.pkl")
-print("\n   poverty_model.pkl and poverty_scaler.pkl saved.")
+print("   poverty_model.pkl and poverty_scaler.pkl saved.")

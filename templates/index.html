@@ -37,7 +37,6 @@
       min-height: 100vh;
     }
 
-    /* ── Top banner ── */
     .topbar {
       background: var(--navy);
       padding: 10px 40px;
@@ -60,10 +59,7 @@
       flex-shrink: 0;
     }
 
-    .topbar-text {
-      display: flex;
-      flex-direction: column;
-    }
+    .topbar-text { display: flex; flex-direction: column; }
 
     .topbar-org {
       font-size: 11px;
@@ -87,17 +83,13 @@
       letter-spacing: 0.05em;
     }
 
-    /* ── Hero strip ── */
     .hero {
       background: var(--navy-mid);
       padding: 36px 40px 32px;
       border-bottom: 3px solid var(--gold);
     }
 
-    .hero-inner {
-      max-width: 900px;
-      margin: 0 auto;
-    }
+    .hero-inner { max-width: 900px; margin: 0 auto; }
 
     .hero-tag {
       display: inline-block;
@@ -129,7 +121,6 @@
       line-height: 1.6;
     }
 
-    /* ── Main layout ── */
     .main {
       max-width: 900px;
       margin: 32px auto;
@@ -140,7 +131,6 @@
       align-items: start;
     }
 
-    /* ── Card ── */
     .card {
       background: var(--white);
       border: 1px solid var(--border);
@@ -173,7 +163,6 @@
 
     .card-body { padding: 24px; }
 
-    /* ── Section label ── */
     .section-label {
       font-size: 10px;
       font-weight: 600;
@@ -187,7 +176,6 @@
 
     .section-label:first-child { margin-top: 0; }
 
-    /* ── Field ── */
     .field { margin-bottom: 16px; }
 
     .field label {
@@ -228,7 +216,6 @@
 
     .field input::placeholder { color: #aab; }
 
-    /* ── Employment toggle ── */
     .toggle-group {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -257,10 +244,8 @@
       color: var(--white);
     }
 
-    /* Hidden input for employment */
     #employment { display: none; }
 
-    /* ── Submit ── */
     .btn-submit {
       width: 100%;
       padding: 13px;
@@ -279,10 +264,8 @@
 
     .btn-submit:hover { background: var(--blue); }
 
-    /* ── Right sidebar ── */
     .sidebar { display: flex; flex-direction: column; gap: 20px; }
 
-    /* ── Result panel ── */
     .result-card {
       background: var(--white);
       border: 1px solid var(--border);
@@ -297,9 +280,9 @@
       gap: 16px;
     }
 
-    .result-band.low    { background: var(--green-bg); border-bottom: 3px solid var(--green); }
+    .result-band.low      { background: var(--green-bg); border-bottom: 3px solid var(--green); }
     .result-band.moderate { background: var(--amber-bg); border-bottom: 3px solid var(--amber); }
-    .result-band.high   { background: var(--red-bg);   border-bottom: 3px solid var(--red); }
+    .result-band.high     { background: var(--red-bg);   border-bottom: 3px solid var(--red); }
 
     .result-icon {
       width: 44px; height: 44px;
@@ -337,7 +320,6 @@
 
     .result-body { padding: 18px 22px; }
 
-    /* ── Risk gauge ── */
     .gauge-label {
       display: flex;
       justify-content: space-between;
@@ -374,7 +356,6 @@
 
     .gauge-sub { font-size: 11px; color: var(--muted); margin-bottom: 14px; }
 
-    /* ── Flags ── */
     .flags-title {
       font-size: 10px;
       font-weight: 600;
@@ -412,7 +393,6 @@
       border-top: 1px solid var(--border);
     }
 
-    /* ── Info box ── */
     .info-card {
       background: var(--white);
       border: 1px solid var(--border);
@@ -462,7 +442,6 @@
     .badge-amber { background: var(--amber-bg); color: var(--amber); }
     .badge-red   { background: var(--red-bg);   color: var(--red); }
 
-    /* ── Error ── */
     .error-box {
       background: var(--red-bg);
       border: 1px solid rgba(185,28,28,0.25);
@@ -473,7 +452,6 @@
       margin-top: 16px;
     }
 
-    /* ── Disclaimer ── */
     .disclaimer {
       font-size: 10px;
       color: var(--muted);
@@ -497,7 +475,6 @@
 </head>
 <body>
 
-<!-- ── Top bar ─────────────────────────────────────────── -->
 <div class="topbar">
   <div class="topbar-logo">P</div>
   <div class="topbar-text">
@@ -507,7 +484,6 @@
   <div class="topbar-right">Model v2.1 &nbsp;|&nbsp; Logistic Regression</div>
 </div>
 
-<!-- ── Hero ───────────────────────────────────────────── -->
 <div class="hero">
   <div class="hero-inner">
     <div class="hero-tag">Household Vulnerability Assessment</div>
@@ -519,10 +495,8 @@
   </div>
 </div>
 
-<!-- ── Main grid ──────────────────────────────────────── -->
 <div class="main">
 
-  <!-- Left: Form -->
   <div>
     <div class="card">
       <div class="card-header">
@@ -536,15 +510,20 @@
 
           <div class="field">
             <label>Monthly Household Income (&#8358;)</label>
-            <input type="number" name="income" placeholder="e.g. 150,000"
-                   value="{{ form_data.income if form_data else '' }}" required>
+            <!-- ▸ type="text" so commas render correctly -->
+            <input type="text" name="income" id="income"
+                   placeholder="e.g. 150,000"
+                   value="{{ form_data.income if form_data else '' }}"
+                   inputmode="numeric" required>
             <small>Total combined monthly income of all household members</small>
           </div>
 
           <div class="field">
             <label>Total Financial Assets (&#8358;)</label>
-            <input type="number" name="financial_assets" placeholder="e.g. 200,000"
-                   value="{{ form_data.financial_assets if form_data else '' }}" required>
+            <input type="text" name="financial_assets" id="financial_assets"
+                   placeholder="e.g. 200,000"
+                   value="{{ form_data.financial_assets if form_data else '' }}"
+                   inputmode="numeric" required>
             <small>Savings, investments, and other financial holdings (not monthly)</small>
           </div>
 
@@ -590,11 +569,9 @@
     </div>
   </div>
 
-  <!-- Right: Results + Info -->
   <div class="sidebar">
 
     {% if verdict %}
-    <!-- Result card -->
     <div class="result-card">
       <div class="result-band {{ level }}">
         <div class="result-icon">
@@ -636,7 +613,6 @@
     </div>
     {% endif %}
 
-    <!-- Info card -->
     <div class="info-card">
       <div class="info-title">Classification Thresholds</div>
       <div class="info-row">
@@ -659,9 +635,10 @@
         <span class="info-key">Training Size</span>
         <span class="info-val">10,000 records</span>
       </div>
+      <!-- ▸ CHANGED: 25,000 → 90,000 -->
       <div class="info-row">
         <span class="info-key">Income Threshold</span>
-        <span class="info-val">&#8358;25,000 / person</span>
+        <span class="info-val">&#8358;90,000 / person</span>
       </div>
     </div>
 
@@ -676,11 +653,51 @@
 </div>
 
 <script>
+  /* ── Employment toggle ── */
   function setEmployment(val, btn) {
     document.getElementById("employment").value = val;
     document.querySelectorAll(".toggle-btn").forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
   }
+
+  /* ── Comma formatting for monetary inputs ── */
+  function addCommas(value) {
+    // Strip existing commas, keep only digits
+    const raw = value.replace(/,/g, "").replace(/[^0-9]/g, "");
+    if (raw === "") return "";
+    return parseInt(raw, 10).toLocaleString("en-NG");
+  }
+
+  function attachCommaFormat(inputId) {
+    const el = document.getElementById(inputId);
+    if (!el) return;
+
+    // Format on every keystroke
+    el.addEventListener("input", function () {
+      const pos = this.selectionStart;
+      const beforeLen = this.value.length;
+      this.value = addCommas(this.value);
+      // Adjust cursor so it doesn't jump to the end
+      const delta = this.value.length - beforeLen;
+      this.setSelectionRange(pos + delta, pos + delta);
+    });
+
+    // Also format any pre-filled value (e.g. after form error repost)
+    if (el.value !== "") {
+      el.value = addCommas(el.value);
+    }
+  }
+
+  attachCommaFormat("income");
+  attachCommaFormat("financial_assets");
+
+  /* ── Strip commas before submit so Flask receives plain numbers ── */
+  document.getElementById("main-form").addEventListener("submit", function () {
+    ["income", "financial_assets"].forEach(function (id) {
+      const el = document.getElementById(id);
+      if (el) el.value = el.value.replace(/,/g, "");
+    });
+  });
 </script>
 
 </body>

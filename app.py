@@ -10,7 +10,7 @@ scaler = joblib.load("poverty_scaler.pkl")
 
 def clean(value):
     """Strip commas and whitespace, return float. Empty = 0.0"""
-    return float(value.replace(",", "").strip() or 0.0)
+    return float(str(value).replace(",", "").strip() or 0.0)
 
 
 @app.route("/")
@@ -53,8 +53,8 @@ def predict():
 
         # Individual risk flags
         flags = []
-        if income_per_person < 25000:
-            flags.append("Income per capita below poverty threshold")
+        if income_per_person < 90000:   # ▸ CHANGED: 25,000 → 90,000
+            flags.append("Income per capita below ₦90,000 poverty threshold")
         if employment == 0:
             flags.append("No active employment reported")
         if education_years < 6:
