@@ -1,127 +1,687 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Poverty Risk Predictor</title>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Poverty Risk Indicator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --navy:       #002244;
+      --navy-mid:   #003366;
+      --blue:       #0073C6;
+      --blue-light: #E8F2FB;
+      --gold:       #F5A623;
+      --green:      #1A7A4A;
+      --green-bg:   #EAF5EF;
+      --amber:      #C05B00;
+      --amber-bg:   #FEF3E7;
+      --red:        #B91C1C;
+      --red-bg:     #FEF2F2;
+      --text:       #1A1A2E;
+      --muted:      #5C6B8A;
+      --border:     #D0DAE8;
+      --bg:         #F4F7FB;
+      --white:      #FFFFFF;
+      --font-serif: 'Source Serif 4', Georgia, serif;
+      --font-sans:  'IBM Plex Sans', sans-serif;
+      --font-mono:  'IBM Plex Mono', monospace;
+    }
 
-    <style>
-        body {
-            font-family: Arial;
-            background: linear-gradient(to right, #667eea, #764ba2);
-            margin: 0;
-            padding: 0;
-        }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        .container {
-            background: white;
-            width: 420px;
-            margin: 60px auto;
-            padding: 30px;
-            border-radius: 10px;
-        }
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
 
-        h2 {
-            text-align: center;
-        }
+    /* ── Top banner ── */
+    .topbar {
+      background: var(--navy);
+      padding: 10px 40px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
 
-        label {
-            font-weight: bold;
-            display: block;
-            margin-top: 15px;
-        }
+    .topbar-logo {
+      width: 36px; height: 36px;
+      background: var(--white);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--navy);
+      font-family: var(--font-serif);
+      flex-shrink: 0;
+    }
 
-        small {
-            color: gray;
-        }
+    .topbar-text {
+      display: flex;
+      flex-direction: column;
+    }
 
-        input {
-            width: 100%;
-            padding: 12px;
-            margin-top: 5px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            background: #fff;   /* FIXES TRANSPARENCY */
-            color: #000;
-        }
+    .topbar-org {
+      font-size: 11px;
+      color: rgba(255,255,255,0.6);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
 
-        button {
-            margin-top: 20px;
-            padding: 12px;
-            width: 100%;
-            background: #667eea;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-size: 16px;
-            cursor: pointer;
-        }
+    .topbar-title {
+      font-size: 13px;
+      color: var(--white);
+      font-weight: 500;
+      letter-spacing: 0.02em;
+    }
 
-        .result {
-            margin-top: 20px;
-            padding: 15px;
-            background: #f1f1f1;
-            border-radius: 8px;
-            text-align: center;
-        }
+    .topbar-right {
+      margin-left: auto;
+      font-size: 11px;
+      color: rgba(255,255,255,0.5);
+      font-family: var(--font-mono);
+      letter-spacing: 0.05em;
+    }
 
-        .high {
-            color: red;
-            font-weight: bold;
-        }
+    /* ── Hero strip ── */
+    .hero {
+      background: var(--navy-mid);
+      padding: 36px 40px 32px;
+      border-bottom: 3px solid var(--gold);
+    }
 
-        .low {
-            color: green;
-            font-weight: bold;
-        }
-    </style>
+    .hero-inner {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .hero-tag {
+      display: inline-block;
+      background: rgba(245,166,35,0.2);
+      border: 1px solid rgba(245,166,35,0.4);
+      color: var(--gold);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 2px;
+      margin-bottom: 12px;
+    }
+
+    .hero h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(22px, 3vw, 32px);
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.2;
+    }
+
+    .hero-sub {
+      margin-top: 8px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.6);
+      max-width: 560px;
+      line-height: 1.6;
+    }
+
+    /* ── Main layout ── */
+    .main {
+      max-width: 900px;
+      margin: 32px auto;
+      padding: 0 24px 60px;
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 24px;
+      align-items: start;
+    }
+
+    /* ── Card ── */
+    .card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .card-header {
+      background: var(--blue-light);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card-header-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--blue);
+    }
+
+    .card-header span {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--navy);
+    }
+
+    .card-body { padding: 24px; }
+
+    /* ── Section label ── */
+    .section-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+      margin: 24px 0 16px;
+    }
+
+    .section-label:first-child { margin-top: 0; }
+
+    /* ── Field ── */
+    .field { margin-bottom: 16px; }
+
+    .field label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: 5px;
+      letter-spacing: 0.02em;
+    }
+
+    .field small {
+      display: block;
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--text);
+      background: var(--white);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(0,115,198,0.1);
+    }
+
+    .field input::placeholder { color: #aab; }
+
+    /* ── Employment toggle ── */
+    .toggle-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .toggle-btn {
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: var(--white);
+      font-family: var(--font-sans);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--muted);
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s;
+    }
+
+    .toggle-btn:hover { border-color: var(--blue); color: var(--blue); }
+
+    .toggle-btn.active {
+      background: var(--blue);
+      border-color: var(--blue);
+      color: var(--white);
+    }
+
+    /* Hidden input for employment */
+    #employment { display: none; }
+
+    /* ── Submit ── */
+    .btn-submit {
+      width: 100%;
+      padding: 13px;
+      background: var(--navy);
+      color: var(--white);
+      border: none;
+      border-radius: 4px;
+      font-family: var(--font-sans);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: background 0.15s;
+    }
+
+    .btn-submit:hover { background: var(--blue); }
+
+    /* ── Right sidebar ── */
+    .sidebar { display: flex; flex-direction: column; gap: 20px; }
+
+    /* ── Result panel ── */
+    .result-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .result-band {
+      padding: 20px 22px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .result-band.low    { background: var(--green-bg); border-bottom: 3px solid var(--green); }
+    .result-band.moderate { background: var(--amber-bg); border-bottom: 3px solid var(--amber); }
+    .result-band.high   { background: var(--red-bg);   border-bottom: 3px solid var(--red); }
+
+    .result-icon {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .low    .result-icon { background: rgba(26,122,74,0.15); }
+    .moderate .result-icon { background: rgba(192,91,0,0.15); }
+    .high   .result-icon { background: rgba(185,28,28,0.15); }
+
+    .result-verdict {
+      font-family: var(--font-serif);
+      font-size: 17px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .low    .result-verdict { color: var(--green); }
+    .moderate .result-verdict { color: var(--amber); }
+    .high   .result-verdict { color: var(--red); }
+
+    .result-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .result-body { padding: 18px 22px; }
+
+    /* ── Risk gauge ── */
+    .gauge-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .gauge-track {
+      height: 8px;
+      background: var(--border);
+      border-radius: 99px;
+      overflow: hidden;
+      margin-bottom: 4px;
+    }
+
+    .gauge-fill {
+      height: 100%;
+      border-radius: 99px;
+      transition: width 1s ease;
+    }
+
+    .low      .gauge-fill { background: var(--green); }
+    .moderate .gauge-fill { background: var(--amber); }
+    .high     .gauge-fill { background: var(--red); }
+
+    .gauge-pct {
+      font-family: var(--font-mono);
+      font-size: 22px;
+      font-weight: 500;
+      color: var(--text);
+      margin: 10px 0 4px;
+    }
+
+    .gauge-sub { font-size: 11px; color: var(--muted); margin-bottom: 14px; }
+
+    /* ── Flags ── */
+    .flags-title {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .flag-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--text);
+      padding: 6px 0;
+      border-top: 1px solid var(--border);
+      line-height: 1.4;
+    }
+
+    .flag-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--amber);
+      flex-shrink: 0;
+      margin-top: 4px;
+    }
+
+    .result-message {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ── Info box ── */
+    .info-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 18px 20px;
+    }
+
+    .info-title {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--navy);
+      margin-bottom: 12px;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 7px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 12px;
+    }
+
+    .info-row:last-child { border-bottom: none; }
+
+    .info-key { color: var(--muted); }
+
+    .info-val {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 2px;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+    }
+
+    .badge-green { background: var(--green-bg); color: var(--green); }
+    .badge-amber { background: var(--amber-bg); color: var(--amber); }
+    .badge-red   { background: var(--red-bg);   color: var(--red); }
+
+    /* ── Error ── */
+    .error-box {
+      background: var(--red-bg);
+      border: 1px solid rgba(185,28,28,0.25);
+      border-radius: 4px;
+      padding: 12px 16px;
+      font-size: 12px;
+      color: var(--red);
+      margin-top: 16px;
+    }
+
+    /* ── Disclaimer ── */
+    .disclaimer {
+      font-size: 10px;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+      padding-left: 24px;
+      padding-right: 24px;
+    }
+
+    @media (max-width: 700px) {
+      .main { grid-template-columns: 1fr; }
+      .topbar { padding: 10px 20px; }
+      .hero { padding: 24px 20px; }
+    }
+  </style>
 </head>
-
 <body>
 
-<div class="container">
-    <h2>Poverty Risk Predictor</h2>
-
-    <form action="/predict" method="POST">
-
-        <label>Monthly Income (₦)</label>
-        <input type="number" name="income" placeholder="e.g. 150000" required>
-        <small>Enter total monthly income in Naira</small>
-
-        <label>Household Size</label>
-      <input type="number" name="household_size" min="1" max="100000" required>
-
-        <label>Years of Education</label>
-        <input type="number" name="education_years" placeholder="e.g. 10" required>
-
-        <label>Employment Status</label>
-        <input type="number" name="employment" placeholder="0 = Unemployed, 1 = Employed" required>
-
-        <label>Financial Assets (₦)</label>
-        <input type="number" name="financial_assets" placeholder="e.g. 200000" required>
-        <small>Total savings/investments (not monthly)</small>
-
-        <button type="submit">Predict</button>
-
-    </form>
-    {% if error %}
-<div class="result" style="background:#ffe6e6; color:red;">
-    {{ error }}
+<!-- ── Top bar ─────────────────────────────────────────── -->
+<div class="topbar">
+  <div class="topbar-logo">P</div>
+  <div class="topbar-text">
+    <span class="topbar-org">Data &amp; Analytics Division</span>
+    <span class="topbar-title">Poverty &amp; Equity Assessment Platform</span>
+  </div>
+  <div class="topbar-right">Model v2.1 &nbsp;|&nbsp; Logistic Regression</div>
 </div>
-{% endif %}
 
-    {% if prediction is not none %}
-    <div class="result">
-        <p><strong>Prediction:</strong> {{ prediction }}</p>
+<!-- ── Hero ───────────────────────────────────────────── -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-tag">Household Vulnerability Assessment</div>
+    <h1>Poverty Risk Indicator</h1>
+    <p class="hero-sub">
+      Enter household socioeconomic data to generate a real-time poverty risk
+      classification based on income, education, employment, and asset indicators.
+    </p>
+  </div>
+</div>
 
-        <p>
-            <strong>Poverty Risk:</strong>
-            <span class="{{ 'high' if probability > 50 else 'low' }}">
-                {{ probability }}%
-            </span>
-        </p>
+<!-- ── Main grid ──────────────────────────────────────── -->
+<div class="main">
+
+  <!-- Left: Form -->
+  <div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-header-dot"></div>
+        <span>Household Data Entry</span>
+      </div>
+      <div class="card-body">
+        <form action="/predict" method="POST" id="main-form">
+
+          <div class="section-label">Income &amp; Assets</div>
+
+          <div class="field">
+            <label>Monthly Household Income (&#8358;)</label>
+            <input type="number" name="income" placeholder="e.g. 150,000"
+                   value="{{ form_data.income if form_data else '' }}" required>
+            <small>Total combined monthly income of all household members</small>
+          </div>
+
+          <div class="field">
+            <label>Total Financial Assets (&#8358;)</label>
+            <input type="number" name="financial_assets" placeholder="e.g. 200,000"
+                   value="{{ form_data.financial_assets if form_data else '' }}" required>
+            <small>Savings, investments, and other financial holdings (not monthly)</small>
+          </div>
+
+          <div class="section-label">Household Profile</div>
+
+          <div class="field">
+            <label>Household Size</label>
+            <input type="number" name="household_size" placeholder="e.g. 4"
+                   min="1" max="30"
+                   value="{{ form_data.household_size if form_data else '' }}" required>
+            <small>Total number of people living in the household</small>
+          </div>
+
+          <div class="field">
+            <label>Years of Education (Head of Household)</label>
+            <input type="number" name="education_years" placeholder="e.g. 12"
+                   min="0" max="25"
+                   value="{{ form_data.education_years if form_data else '' }}" required>
+            <small>0 = No formal education &nbsp;|&nbsp; 6 = Primary &nbsp;|&nbsp; 12 = Secondary &nbsp;|&nbsp; 16+ = University</small>
+          </div>
+
+          <div class="section-label">Employment Status</div>
+
+          <div class="field">
+            <label>Primary Earner Employment</label>
+            <input type="number" name="employment" id="employment"
+                   value="{{ form_data.employment if form_data else '1' }}" required>
+            <div class="toggle-group">
+              <button type="button" class="toggle-btn {% if not form_data or form_data.employment == '1' %}active{% endif %}"
+                      onclick="setEmployment(1, this)">&#10003; &nbsp;Employed</button>
+              <button type="button" class="toggle-btn {% if form_data and form_data.employment == '0' %}active{% endif %}"
+                      onclick="setEmployment(0, this)">&#10007; &nbsp;Unemployed</button>
+            </div>
+          </div>
+
+          {% if error %}
+          <div class="error-box">&#9888; &nbsp;{{ error }}</div>
+          {% endif %}
+
+          <button type="submit" class="btn-submit">Generate Risk Assessment &rarr;</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right: Results + Info -->
+  <div class="sidebar">
+
+    {% if verdict %}
+    <!-- Result card -->
+    <div class="result-card">
+      <div class="result-band {{ level }}">
+        <div class="result-icon">
+          {% if level == 'low' %}&#9679;
+          {% elif level == 'moderate' %}&#9650;
+          {% else %}&#9888;{% endif %}
+        </div>
+        <div>
+          <div class="result-verdict">{{ verdict }}</div>
+          <div class="result-label">Poverty Risk Classification</div>
+        </div>
+      </div>
+
+      <div class="result-body {{ level }}">
+        <div class="gauge-pct">{{ prob_pct }}%</div>
+        <div class="gauge-sub">Estimated poverty risk probability</div>
+
+        <div class="gauge-label">
+          <span>0%</span><span>50%</span><span>100%</span>
+        </div>
+        <div class="gauge-track">
+          <div class="gauge-fill" style="width: {{ prob_pct }}%"></div>
+        </div>
+
+        {% if flags %}
+        <div style="margin-top: 18px;">
+          <div class="flags-title">Risk Flags Detected</div>
+          {% for flag in flags %}
+          <div class="flag-item">
+            <div class="flag-dot"></div>
+            <span>{{ flag }}</span>
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="result-message">{{ message }}</div>
+      </div>
     </div>
     {% endif %}
 
+    <!-- Info card -->
+    <div class="info-card">
+      <div class="info-title">Classification Thresholds</div>
+      <div class="info-row">
+        <span class="info-key">Low Risk</span>
+        <span class="badge badge-green">0 – 40%</span>
+      </div>
+      <div class="info-row">
+        <span class="info-key">Moderate Risk</span>
+        <span class="badge badge-amber">40 – 70%</span>
+      </div>
+      <div class="info-row">
+        <span class="info-key">High Risk</span>
+        <span class="badge badge-red">Above 70%</span>
+      </div>
+      <div class="info-row">
+        <span class="info-key">Model</span>
+        <span class="info-val">Logistic Regression</span>
+      </div>
+      <div class="info-row">
+        <span class="info-key">Training Size</span>
+        <span class="info-val">10,000 records</span>
+      </div>
+      <div class="info-row">
+        <span class="info-key">Income Threshold</span>
+        <span class="info-val">&#8358;25,000 / person</span>
+      </div>
+    </div>
+
+  </div>
 </div>
+
+<div class="disclaimer">
+  <strong>Disclaimer:</strong> This tool is for analytical and research purposes only. Results are
+  generated by a machine learning model trained on synthetic data and should not be used as the
+  sole basis for policy decisions or individual assessments. For official poverty measurement,
+  consult nationally representative household surveys.
+</div>
+
+<script>
+  function setEmployment(val, btn) {
+    document.getElementById("employment").value = val;
+    document.querySelectorAll(".toggle-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+  }
+</script>
 
 </body>
 </html>
